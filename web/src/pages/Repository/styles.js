@@ -59,6 +59,11 @@ export const Owner = styled.div`
         font-weight: bold;
       }
 
+      &[disabled] {
+        background: #7159c1;
+        color: #fff;
+      }
+
       &:focus {
         background: #7159c1;
         color: #fff;
@@ -66,6 +71,11 @@ export const Owner = styled.div`
     }
   }
 `;
+
+export const ButtonFilter = styled.button.attrs(props => ({
+  type: 'button',
+  disabled: props.filter,
+}))``;
 
 export const IssuesList = styled.ul`
   padding-top: 30px;
