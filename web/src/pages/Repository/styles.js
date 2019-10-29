@@ -40,6 +40,31 @@ export const Owner = styled.div`
     text-align: center;
     max-width: 400px;
   }
+  div {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+
+    button {
+      height: 30px;
+      width: 80px;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.5);
+      border: 0;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+
+      &:hover {
+        font-weight: bold;
+      }
+
+      &:focus {
+        background: #7159c1;
+        color: #fff;
+      }
+    }
+  }
 `;
 
 export const IssuesList = styled.ul`
