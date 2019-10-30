@@ -42,40 +42,62 @@ export const Owner = styled.div`
   }
   div {
     margin-top: 10px;
+    margin-bottom: 10px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 10px;
-
-    button {
-      height: 30px;
-      width: 80px;
-      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.5);
-      border: 0;
-      border-radius: 4px;
-      background: #fff;
-      cursor: pointer;
-
-      &:hover {
-        font-weight: bold;
-      }
-
-      &[disabled] {
-        background: #7159c1;
-        color: #fff;
-      }
-
-      &:focus {
-        background: #7159c1;
-        color: #fff;
-      }
-    }
+    justify-items: center;
+    align-items: center;
+    font-size: 10px;
   }
 `;
 
 export const ButtonFilter = styled.button.attrs(props => ({
   type: 'button',
   disabled: props.filter,
-}))``;
+}))`
+  height: 30px;
+  width: 80px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.5);
+  border: 0;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    font-weight: bold;
+  }
+
+  &[disabled] {
+    background: #7159c1;
+    color: #fff;
+  }
+
+  &:focus {
+    background: #7159c1;
+    color: #fff;
+  }
+`;
+
+export const ButtonPage = styled.button.attrs(props => ({
+  type: 'button',
+  disabled: props.lock,
+}))`
+  height: 20px;
+  width: 50px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.5);
+  border: 0;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 10px;
+
+  &:hover {
+    background: #7159c1;
+    color: #fff;
+  }
+`;
 
 export const IssuesList = styled.ul`
   padding-top: 30px;

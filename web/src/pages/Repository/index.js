@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
-import { Loading, Owner, IssuesList, ButtonFilter } from './styles';
+import { Loading, Owner, IssuesList, ButtonFilter, ButtonPage } from './styles';
 
 export default class Repository extends Component {
   static propTypes = {
@@ -21,6 +21,8 @@ export default class Repository extends Component {
     loading: true,
     filter: 'all',
     page: 1,
+    prev: 0,
+    next: 2,
   };
 
   async componentDidMount() {
@@ -67,8 +69,42 @@ export default class Repository extends Component {
     });
   };
 
+  handleAddPage = async e => {
+    e.preventDefault();
+    const { match } = this.props;
+    const { page, next, filter } = this.state;
+    const repoName = decodeURIComponent(match.params.repository);
+
+    this.setState({
+      loading: true,
+    });
+
+    const issues = await api.get(
+      `/repos/${repoName}/issues?state=${filter}&page=${next}`
+    );
+
+    this.setState({
+      prev: page,
+      page: next,
+      issues: issues.data,
+      loading: false,
+    });
+  };
+
+  handlePage = async e => {
+    e.preventDefault();
+  };
+
   render() {
-    const { repository, issues, loading, filter } = this.state;
+    const {
+      repository,
+      issues,
+      loading,
+      filter,
+      prev,
+      next,
+      page,
+    } = this.state;
 
     if (loading) {
       return <Loading>Carregando...</Loading>;
@@ -105,6 +141,15 @@ export default class Repository extends Component {
             >
               Fechados
             </ButtonFilter>
+          </div>
+          <div id="pages">
+            <ButtonPage lock={prev === 0 ? 0 : 1} onClick={this.handleAddPage}>
+              Anterior
+            </ButtonPage>
+            <span>Página: {page}</span>
+            <ButtonPage lock={next === 0 ? 0 : 1} onClick={this.handleSubPage}>
+              Próxima
+            </ButtonPage>
           </div>
         </Owner>
         <IssuesList>
