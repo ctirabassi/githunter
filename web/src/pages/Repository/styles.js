@@ -93,9 +93,13 @@ export const ButtonPage = styled.button.attrs(props => ({
   cursor: pointer;
   font-size: 10px;
 
-  &:hover {
+  &:active {
     background: #7159c1;
     color: #fff;
+  }
+
+  &[disabled] {
+    color: #eee;
   }
 `;
 

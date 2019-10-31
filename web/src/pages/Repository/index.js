@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import parse from 'parse-link-header';
 import PropTypes from 'prop-types';
 import api from '../../services/api';
 
@@ -40,12 +41,30 @@ export default class Repository extends Component {
       }),
     ]);
 
+    this.setPages(issues);
+
     this.setState({
       repository: repository.data,
       issues: issues.data,
       loading: false,
     });
   }
+
+  setPages = data => {
+    const { page } = this.state;
+
+    if (!data.headers.link) {
+      this.setState({
+        next: 0,
+      });
+    } else {
+      const parsed = parse(data.headers.link);
+      this.setState({
+        prev: page - 1,
+        next: parsed.next ? parseInt(parsed.next.page) : 0,
+      });
+    }
+  };
 
   handleFilter = async e => {
     e.preventDefault();
@@ -72,27 +91,52 @@ export default class Repository extends Component {
   handleAddPage = async e => {
     e.preventDefault();
     const { match } = this.props;
-    const { page, next, filter } = this.state;
+    const { next, filter } = this.state;
     const repoName = decodeURIComponent(match.params.repository);
+
+    if (next === 0) return;
 
     this.setState({
       loading: true,
+      page: next,
     });
 
     const issues = await api.get(
       `/repos/${repoName}/issues?state=${filter}&page=${next}`
     );
 
+    this.setPages(issues);
+
     this.setState({
-      prev: page,
-      page: next,
       issues: issues.data,
       loading: false,
     });
   };
 
-  handlePage = async e => {
+  handleSubPage = async e => {
     e.preventDefault();
+
+    const { match } = this.props;
+    const { prev, filter } = this.state;
+    const repoName = decodeURIComponent(match.params.repository);
+
+    if (prev === 0) return;
+
+    this.setState({
+      loading: true,
+      page: prev,
+    });
+
+    const issues = await api.get(
+      `/repos/${repoName}/issues?state=${filter}&page=${prev}`
+    );
+
+    this.setPages(issues);
+
+    this.setState({
+      issues: issues.data,
+      loading: false,
+    });
   };
 
   render() {
@@ -143,11 +187,11 @@ export default class Repository extends Component {
             </ButtonFilter>
           </div>
           <div id="pages">
-            <ButtonPage lock={prev === 0 ? 0 : 1} onClick={this.handleAddPage}>
+            <ButtonPage lock={prev === 0 ? 1 : 0} onClick={this.handleSubPage}>
               Anterior
             </ButtonPage>
             <span>Página: {page}</span>
-            <ButtonPage lock={next === 0 ? 0 : 1} onClick={this.handleSubPage}>
+            <ButtonPage lock={next === 0 ? 1 : 0} onClick={this.handleAddPage}>
               Próxima
             </ButtonPage>
           </div>
